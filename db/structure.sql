@@ -40,6 +40,70 @@ CREATE TABLE ar_internal_metadata (
 
 
 --
+-- Name: customer_search_terms; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE customer_search_terms (
+    id bigint NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: customer_search_terms_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE customer_search_terms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customer_search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE customer_search_terms_id_seq OWNED BY customer_search_terms.id;
+
+
+--
+-- Name: customers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE customers (
+    id bigint NOT NULL,
+    first_name character varying NOT NULL,
+    last_name character varying NOT NULL,
+    email character varying NOT NULL,
+    username character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: customers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE customers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE customers_id_seq OWNED BY customers.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -90,6 +154,20 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
+-- Name: customer_search_terms id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customer_search_terms ALTER COLUMN id SET DEFAULT nextval('customer_search_terms_id_seq'::regclass);
+
+
+--
+-- Name: customers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customers ALTER COLUMN id SET DEFAULT nextval('customers_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -102,6 +180,22 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 ALTER TABLE ONLY ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: customer_search_terms customer_search_terms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customer_search_terms
+    ADD CONSTRAINT customer_search_terms_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: customers customers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customers
+    ADD CONSTRAINT customers_pkey PRIMARY KEY (id);
 
 
 --
@@ -118,6 +212,41 @@ ALTER TABLE ONLY schema_migrations
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_customers_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_customers_on_email ON customers USING btree (email);
+
+
+--
+-- Name: index_customers_on_lower_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customers_on_lower_email ON customers USING btree (lower((email)::text));
+
+
+--
+-- Name: index_customers_on_lower_first_name_varchar_pattern_ops; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customers_on_lower_first_name_varchar_pattern_ops ON customers USING btree (lower((first_name)::text) varchar_pattern_ops);
+
+
+--
+-- Name: index_customers_on_lower_last_name_varchar_pattern_ops; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customers_on_lower_last_name_varchar_pattern_ops ON customers USING btree (lower((last_name)::text) varchar_pattern_ops);
+
+
+--
+-- Name: index_customers_on_username; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_customers_on_username ON customers USING btree (username);
 
 
 --
@@ -142,6 +271,9 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20170720075953'),
-('20170720091256');
+('20170720091256'),
+('20170721021725'),
+('20170721032229'),
+('20170721043037');
 
 
